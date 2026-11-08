@@ -1,0 +1,110 @@
+<!doctype html><html lang="en-GB"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#0b1020"><title>Phil's Hub</title>
+<style>
+:root{--bg:#0b1020;--card:#141b2f;--line:#25304d;--tx:#e8ecf6;--mu:#93a0bf;--ac:#7c9cff;--hold:#f5b94a;--book:#3ccf8e;--skip:#ff6b7a;--diary:#5bc0ff}
+*{box-sizing:border-box}body{margin:0;font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;background:radial-gradient(1200px 600px at 10% -10%,#1d2a55 0,transparent 60%),var(--bg);color:var(--tx);min-height:100vh}
+header{position:sticky;top:0;z-index:5;backdrop-filter:blur(14px);background:#0b1020cc;border-bottom:1px solid var(--line);padding:14px 16px calc(10px) }
+.top{display:flex;align-items:center;justify-content:space-between;max-width:900px;margin:auto}
+h1{margin:0;font-size:22px;letter-spacing:-.3px}h1 span{background:linear-gradient(90deg,#7c9cff,#c18cff);-webkit-background-clip:text;color:transparent}
+.sub{color:var(--mu);font-size:12px}
+.gear{background:none;border:1px solid var(--line);color:var(--tx);border-radius:12px;width:42px;height:42px;font-size:20px;cursor:pointer}
+.chips{display:flex;gap:8px;overflow-x:auto;max-width:900px;margin:10px auto 0;padding-bottom:2px}
+.chip{flex:none;border:1px solid var(--line);background:#141b2f;color:var(--mu);padding:7px 13px;border-radius:999px;font-size:13px;cursor:pointer}
+.chip.on{background:var(--ac);color:#0b1020;border-color:var(--ac);font-weight:600}
+main{max-width:900px;margin:auto;padding:14px 12px 80px;display:grid;gap:12px}
+@media(min-width:720px){main{grid-template-columns:1fr 1fr}}
+.month{grid-column:1/-1;color:var(--mu);font-size:12px;text-transform:uppercase;letter-spacing:1.2px;margin:10px 4px 0}
+.card{background:linear-gradient(180deg,#18213a,#131a2d);border:1px solid var(--line);border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:9px;box-shadow:0 8px 24px #0004}
+.row{display:flex;gap:12px;align-items:flex-start}
+.date{flex:none;width:56px;text-align:center;border-radius:12px;background:#0e1426;border:1px solid var(--line);padding:6px 0}
+.date b{display:block;font-size:20px}.date small{color:var(--mu);font-size:11px;text-transform:uppercase}
+.t{font-weight:650;font-size:15.5px}.meta{color:var(--mu);font-size:13px}
+.badge{display:inline-block;font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;border:1px solid}
+.s-Undecided{color:var(--mu);border-color:var(--line)}.s-Hold{color:var(--hold);border-color:var(--hold)}.s-Booked,.s-Book{color:var(--book);border-color:var(--book)}.s-Skip,.s-Skipped{color:var(--skip);border-color:var(--skip)}.s-In.diary{color:var(--diary);border-color:var(--diary)}
+.req{color:var(--ac);border-color:var(--ac)}
+.why{font-size:13.5px}.clash{font-size:12.5px;color:#ffd38a;background:#3a2c0f;border:1px solid #6b5218;border-radius:10px;padding:6px 9px}
+.cost{font-size:13px}
+details{font-size:12.5px;color:var(--mu)}summary{cursor:pointer}
+.acts{display:flex;gap:8px}.acts button{flex:1;border:0;border-radius:12px;padding:11px 0;font-weight:650;font-size:14px;cursor:pointer;color:#0b1020;transition:transform .08s}
+.acts button:active{transform:scale(.96)}.a-Hold{background:var(--hold)}.a-Book{background:var(--book)}.a-Skip{background:var(--skip)}
+.acts button.sel{outline:3px solid #fff}
+a{color:var(--ac)}
+#lock,#set{position:fixed;inset:0;background:#0b1020f2;display:none;align-items:center;justify-content:center;padding:20px;z-index:10}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;max-width:440px;width:100%}
+.panel label{display:block;font-size:12px;color:var(--mu);margin:10px 0 4px}.panel input{width:100%;padding:10px;border-radius:10px;border:1px solid var(--line);background:#0e1426;color:var(--tx);font-size:14px}
+.panel .btns{display:flex;gap:8px;margin-top:14px}.panel button{flex:1;padding:10px;border-radius:10px;border:0;font-weight:600;cursor:pointer}
+.p{background:var(--ac)}.g{background:#25304d;color:var(--tx)}
+#toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#1e2846;border:1px solid var(--line);padding:10px 16px;border-radius:12px;font-size:13px;opacity:0;transition:.3s;z-index:20}
+#q{font-size:12px;color:var(--hold);text-align:center;max-width:900px;margin:6px auto 0}
+</style></head><body>
+<header><div class="top"><div><h1><span>Phil's Hub</span></h1><div class="sub" id="upd">Loading…</div></div><button class="gear" onclick="openSet()" aria-label="Settings">⚙</button></div>
+<div class="chips" id="chips"></div><div id="q"></div></header>
+<main id="list"></main>
+<div id="lock"><div class="panel"><b>Locked</b><p class="sub">Open the private link with its key, or paste the access key.</p><input id="kin" placeholder="Access key"><div class="btns"><button class="p" onclick="useKey()">Unlock</button></div></div></div>
+<div id="set"><div class="panel"><b>Settings</b>
+<label>Webhook URL</label><input id="wu" placeholder="https://…">
+<label>Sender key</label><input id="wk" type="password" placeholder="paste once">
+<label>Key header name</label><input id="wh" placeholder="Authorization">
+<label>Key prefix</label><input id="wp" placeholder="Bearer ">
+<div class="btns"><button class="g" onclick="testHook()">Send test</button><button class="g" onclick="closeSet()">Cancel</button><button class="p" onclick="saveSet()">Save</button></div>
+<p class="sub" id="setmsg"></p></div></div>
+<div id="toast"></div>
+<script>
+const LS=localStorage, $=s=>document.querySelector(s);
+const cfg=()=>({url:LS.hub_url||'',key:LS.hub_key||'',hdr:LS.hub_hdr||'Authorization',pre:LS.hub_pre??'Bearer '});
+let DATA=null, FILTER='All';
+const req=()=>JSON.parse(LS.hub_req||'{}'), setReq=o=>LS.hub_req=JSON.stringify(o);
+const queue=()=>JSON.parse(LS.hub_q||'[]'), setQueue=q=>{LS.hub_q=JSON.stringify(q);showQ()};
+function toast(m){const t=$('#toast');t.textContent=m;t.style.opacity=1;clearTimeout(t._);t._=setTimeout(()=>t.style.opacity=0,2600)}
+function getKey(){const m=location.hash.match(/k=([^&]+)/);if(m){LS.hub_k=decodeURIComponent(m[1]);}return LS.hub_k}
+const ub=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+async function load(){const k=getKey();if(!k){$('#lock').style.display='flex';return}
+ try{const e=await (await fetch('data.enc.json?'+Date.now(),{cache:'no-store'})).json();
+ const base=await crypto.subtle.importKey('raw',new TextEncoder().encode(k),'PBKDF2',false,['deriveKey']);
+ const key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:ub(e.salt),iterations:e.iter,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['decrypt']);
+ DATA=JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:ub(e.iv)},key,ub(e.ct))));
+ $('#lock').style.display='none';render()}catch(err){delete LS.hub_k;$('#lock').style.display='flex';toast('Wrong or missing key')}}
+function useKey(){LS.hub_k=$('#kin').value.trim();load()}
+const items=()=>DATA.sections.flatMap(s=>s.items.map(i=>({...i,section:s.id})));
+function eff(i){const r=req()[i.id];if(r&&r.base===i.status)return{label:'Requested: '+r.choice,cls:'req'};if(r){const o=req();delete o[i.id];setReq(o)}return{label:i.status,cls:'s-'+i.status}}
+function render(){$('#upd').textContent='Updated '+DATA.updated+' (Dubai)';
+ const all=items().sort((a,b)=>a.sort.localeCompare(b.sort)), r=req();
+ const sts=['All','Undecided','Requested',...new Set(all.map(i=>i.status).filter(s=>s!=='Undecided'))];
+ $('#chips').innerHTML=sts.map(s=>`<button class="chip ${s===FILTER?'on':''}" onclick="FILTER='${s}';render()">${s}</button>`).join('');
+ const vis=all.filter(i=>FILTER==='All'||(FILTER==='Requested'?r[i.id]:i.status===FILTER&&!r[i.id]));
+ let html='',mon='';const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+ for(const i of vis){const d=new Date(i.sort+'T00:00:00'),m=d.toLocaleDateString('en-GB',{month:'long',year:'numeric'});
+  if(m!==mon){mon=m;html+=`<div class="month">${m}</div>`}
+  const e=eff(i),sel=r[i.id]?.choice;
+  html+=`<div class="card"><div class="row"><div class="date"><small>${d.toLocaleDateString('en-GB',{weekday:'short'})}</small><b>${d.getDate()}</b><small>${d.toLocaleDateString('en-GB',{month:'short'})}</small></div>
+  <div style="flex:1"><div class="t">${esc(i.title)}</div><div class="meta">${esc(i.date)} · ${esc(i.time)}</div><div class="meta">📍 ${esc(i.venue)}</div></div></div>
+  <div><span class="badge ${e.cls}">${esc(e.label)}</span> <span class="meta">${i.id}</span></div>
+  ${i.cost?`<div class="cost">💷 ${esc(i.cost)}</div>`:''}<div class="why">${esc(i.why)}</div>
+  ${i.clash?`<div class="clash">⚠ ${esc(i.clash)}</div>`:''}
+  <details><summary>Details${i.link?' & link':''}</summary><p>${esc(i.notes)}</p>${i.link?`<a href="${esc(i.link)}" target="_blank" rel="noopener noreferrer">Event page ↗</a>`:''}</details>
+  ${(i.actions||[]).length?`<div class="acts">${i.actions.map(a=>`<button class="a-${a} ${sel===a?'sel':''}" onclick="act('${i.id}','${a}')">${a}</button>`).join('')}</div>`:''}</div>`}
+ $('#list').innerHTML=html||'<p class="sub">Nothing here.</p>';showQ()}
+async function post(p,c){const h={'Content-Type':'application/json'};if(c.key)h[c.hdr]=c.pre+c.key;
+ try{const r=await fetch(c.url,{method:'POST',headers:h,body:JSON.stringify(p)});return r.ok?'ok':(r.status>=500||r.status===429?'retry':'rejected:'+r.status)}
+ catch(e){ // CORS or network: fire a simple no-cors request (header cannot be sent, so key goes in body)
+  if(!navigator.onLine)return 'retry';
+  try{await fetch(c.url,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify({...p,key:c.key})});return 'opaque'}catch(_){return 'retry'}}}
+async function act(id,choice){const i=items().find(x=>x.id===id),c=cfg();
+ const p={id,title:i.title,date:i.date,choice,ts:new Date().toISOString(),source:'phils-hub',section:i.section};
+ const o=req();o[id]={choice,base:i.status,ts:p.ts};setReq(o);render();
+ if(!c.url){setQueue([...queue(),p]);toast('Saved - add webhook in ⚙ to send');return}
+ toast('Sent: '+choice+' - '+i.title);const r=await post(p,c);
+ if(r==='retry')setQueue([...queue(),p]);else if(r.startsWith('rejected'))toast('Webhook refused ('+r.split(':')[1]+') - check key in ⚙')}
+async function flush(){const c=cfg();if(!c.url)return;const q=queue();if(!q.length)return;const left=[];
+ for(const p of q){const r=await post(p,c);if(r==='retry')left.push(p)}setQueue(left)}
+function showQ(){const n=queue().length;$('#q').textContent=n?`${n} choice${n>1?'s':''} waiting to send - will retry`:''}
+function openSet(){const c=cfg();$('#wu').value=c.url;$('#wk').value=c.key;$('#wh').value=c.hdr;$('#wp').value=c.pre;$('#setmsg').textContent='';$('#set').style.display='flex'}
+function closeSet(){$('#set').style.display='none'}
+function saveSet(){LS.hub_url=$('#wu').value.trim();LS.hub_key=$('#wk').value.trim();LS.hub_hdr=$('#wh').value.trim()||'Authorization';LS.hub_pre=$('#wp').value;closeSet();toast('Saved');flush()}
+async function testHook(){saveSet();const r=await post({id:'TEST',title:'Connection test',date:'',choice:'Test',ts:new Date().toISOString(),source:'phils-hub'},cfg());
+ toast(r==='ok'?'Webhook confirmed ✓':r==='opaque'?'Sent (browser could not confirm - CORS)':'Failed: '+r)}
+addEventListener('online',flush);setInterval(flush,60000);
+load().then(flush);
+</script></body></html>
